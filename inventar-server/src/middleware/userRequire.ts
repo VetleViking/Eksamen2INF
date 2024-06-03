@@ -5,7 +5,8 @@ const userRequireMiddleware = async (req, res, next) => {
     const excludedRoutes = [
         'users/login',
         'inventory/upload',
-        'inventory/get'
+        'inventory/get',
+        'users/createuser',
     ];
     console.log('User Connected', req.ip);
 

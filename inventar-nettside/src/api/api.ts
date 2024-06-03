@@ -64,3 +64,16 @@ export async function login(username: string, password: string) {
 
     return await response.json();
 }
+
+export async function decode_jwt(token: string) {
+    const response = await fetch(`http://localhost:4000/api/v1/users/decodejwt`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ token })
+    });
+
+    return await response.json();
+}
