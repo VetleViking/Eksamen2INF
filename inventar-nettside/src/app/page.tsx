@@ -27,7 +27,6 @@ export default function Home() {
   async function fetchItems() {
     const items = await get_items();
     setItems(items);
-    setFilteredItems(items.filter((item: { loanedBy: any }) => !item.loanedBy));
   }
 
   useEffect(() => {
@@ -117,13 +116,13 @@ export default function Home() {
       });
     });
   
-    setFilteredItems(newFilteredItems);
+    setFilteredItems(newFilteredItems.filter((item: { loanedBy: any }) => !item.loanedBy));
     sortItems();
   }, [search, items]);
 
   return (
     <div>
-      <Header username={username} />
+      <Header />
       <div>
         <div>
           <p>Logget inn som: {username}</p>

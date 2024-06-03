@@ -3,13 +3,16 @@ import { get_items, decode_jwt, return_items } from "@/api/api";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
+import Search from "@/components/Search";
 
 export default function Loans() {
   const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [groupBy, setGroupBy] = useState("Ingen");
   const [groupedItems, setGroupedItems] = useState<{ [key: string]: any[] }>({});
   const [username, setUsername] = useState('');
+  const [search, setSearch] = useState('');
 
   const handleItemClick = (index: number) => {
     setSelectedItems(prevSelectedItems => {
@@ -46,8 +49,8 @@ export default function Loans() {
     }
   }, [items, username]);
 
-  useEffect(() => {
-    if (groupBy && items) {
+  function sortItems() {
+    if (groupBy && filteredItems) {
       const norwegianToEnglish: { [key: string]: string } = {
         "Produsent": "manufacturer",
         "Beskrivelse": "description",
@@ -64,8 +67,8 @@ export default function Loans() {
         return new Date(`${month}/${day}/${year}`).getTime();
       };
 
-      const filteredItems = items.filter((item: { loanedBy: any }) => item.loanedBy === username);
-  
+      
+
       // sorts items
       const newSortedItems = [...filteredItems].sort((a, b) => {
         if (englishGroupBy === 'purchasePrice') {
@@ -93,7 +96,6 @@ export default function Loans() {
         return groups;
       }, {});
   
-
       // sorts items in groups by description
       Object.keys(groupedItems).forEach(group => {
         groupedItems[group].sort((a, b) => a.description.localeCompare(b.description));
@@ -101,11 +103,28 @@ export default function Loans() {
   
       setGroupedItems(groupedItems);
     }
-  }, [groupBy, items]);
+  }
+
+  useEffect(() => {
+    sortItems();
+  }, [groupBy, items, filteredItems]);
+
+  useEffect(() => {
+    const newFilteredItems = items.filter((item: any) => {
+      const values = Object.values(item);
+      return values.some(value => {
+        const valueString = value !== null && value !== undefined ? value.toString() : '';
+        return valueString.toLowerCase().includes(search.toLowerCase());
+      });
+    });
+  
+    setFilteredItems(newFilteredItems.filter((item: { loanedBy: any }) => item.loanedBy === username));
+    sortItems();
+  }, [search, items]);
 
   return (
     <div>
-      <Header username={username} />
+      <Header />
       <div>
         <div>
           <p>Logget inn som: {username}</p>
@@ -113,6 +132,7 @@ export default function Loans() {
             localStorage.removeItem('token');
             window.location.href = '/login';
           }}>Logg ut</button>
+          <p>Lever utstyr</p>
         </div>
         <div>
           <p>valgt utstyr:</p> {(() => {
@@ -154,6 +174,10 @@ export default function Loans() {
           }}>Tøm valg</button>
         </div>
       </div>
+      <Search 
+        search={search}
+        setSearch={setSearch}
+       />
       <FullItemList
         groupByProps={{
           groupByOptions: ["Ingen", "Produsent", "Beskrivelse", "Innkjøpsdato", "Innkjøpspris", "Forventet levetid", "Kategori"],
