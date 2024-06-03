@@ -1,9 +1,6 @@
 "use client";
-import { upload_items, get_items, loan_items, decode_jwt } from "@/api/api";
-import GroupedListItem from "@/components/GroupedListItem";
-import ListItem from "@/components/ListItem";
-import GroupBy from "@/components/GroupBy";
-import { createContext, use, useEffect, useState } from "react";
+import { get_items, loan_items, decode_jwt } from "@/api/api";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
 
@@ -13,7 +10,6 @@ export default function Home() {
   const [groupBy, setGroupBy] = useState("Ingen");
   const [groupedItems, setGroupedItems] = useState<{ [key: string]: any[] }>({});
   const [username, setUsername] = useState('');
-  const UserContext = createContext('')
 
   const handleItemClick = (index: number) => {
     setSelectedItems(prevSelectedItems => {
@@ -109,6 +105,10 @@ export default function Home() {
       <div>
         <div>
           <p>Logget inn som: {username}</p>
+          <button onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+          }}>Logg ut</button>
           <p>Lån utstyr</p>
         </div>
         <div>
