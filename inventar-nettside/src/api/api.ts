@@ -29,6 +29,18 @@ export async function get_items() {
     return await response.json();
 }
 
+export async function loan_items(item_ids: number[], loaned_to: string) {
+    const response = await fetch(`http://localhost:4000/api/v1/inventory/loan`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ item_ids, loaned_to })
+    });
+
+    return await response.json();
+}
+
 export async function create_user(username: string, password: string) {
     const response = await fetch(`http://localhost:4000/api/v1/users/createuser`, {
         method: 'POST',

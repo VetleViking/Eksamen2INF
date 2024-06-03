@@ -33,13 +33,13 @@ const ListItem= ({ item, onClick, selected }: ListProps) => {
 
 
     return (
-        <div className={`border border-black cursor-pointer p-1 ${selected ? "bg-blue-200" : ""}`} onClick={handleClick}>
+        <div className={`border border-black cursor-pointer p-1 mx-1 ${selected ? "bg-blue-200" : ""}`} onClick={handleClick}>
             <div className="flex justify-between">
                 <p>{item.description}</p>
                 <Image src={down_arrow} alt="Down arrow" width={15} height={15} onClick={handleImageClick} className={dropdown ? "transform rotate-180" : ""}/>
             </div>
             {dropdown ? (
-                <div className="border border-black p-1">
+                <div className="border border-black p-1 mt-1">
                     <p>Produsent: {item.manufacturer}</p>
                     <p>Beskrivelse: {item.description}</p>
                     <p>Spesifikasjoner: {item.specifications}</p>

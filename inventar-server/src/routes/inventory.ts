@@ -50,14 +50,39 @@ router.get('/get', async (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
-// {
-//     "Produsent": "Hewlett Packard",
-//     "Beskrivelse": "HP Envy Desktop TE01-4254",
-//     "Spesifikasjoner": "Intel Core i7-13700, 16GB RAM, 1TB SSD, Intel UHD Graphics 770, Windows 11 Home",
-//     "Innkj\u00f8psdato": "15.08.2023",
-//     "Innkj\u00f8pspris": 999.99,
-//     "Forventet levetid (i \u00e5r)": 5,
-//     "Kategori": "Datamaskiner"
-// },
+router.post('/loan', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { item_ids, loaned_to } = req.body;
+
+        for (const id of item_ids) {
+            let item = JSON.parse(await redisClient.get(`inventory:${id}`));
+            item.loanedBy = loaned_to;
+
+            await redisClient.set(`inventory:${id}`, JSON.stringify(item));
+        }
+
+        res.status(200).json({ message: 'Items loaned successfully' });
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/return', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { item_ids } = req.body;
+
+        for (const id of item_ids) {
+            let item = JSON.parse(await redisClient.get(`inventory:${id}`));
+            item.loanedBy = null;
+
+            await redisClient.set(`inventory:${id}`, JSON.stringify(item));
+        }
+
+        res.status(200).json({ message: 'Items returned successfully' });
+    } catch(err) {
+        next(err);
+    }
+});
+
 
 export default router;
