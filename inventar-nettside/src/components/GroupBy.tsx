@@ -22,9 +22,9 @@ const GroupBy= ({groupByOptions, selectedGroupBy, setSelectedGroupBy}: GroupProp
                     <p>Grupper etter: {selectedGroupBy}</p>
                     <Image src={down_arrow} alt="Down arrow" width={15} height={15} className="transform rotate-180"/>
                 </div>
-                <div className="border border-black p-1">
+                <div className="mt-1">
                     {groupByOptions.map((option, index) => (
-                        <p key={index} onClick={() => setSelectedGroupBy(option)}>{option}</p>
+                        <p className="border border-black p-1" key={index} onClick={() => setSelectedGroupBy(option)}>{option}</p>
                     ))}
                 </div>
             </div>
