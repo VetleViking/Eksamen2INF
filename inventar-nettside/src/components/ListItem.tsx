@@ -31,7 +31,6 @@ const ListItem= ({ item, onClick, selected }: ListProps) => {
         onClick();
     };
 
-
     return (
         <div className={`border border-black cursor-pointer p-1 mx-1 ${selected ? "bg-blue-200" : ""}`} onClick={handleClick}>
             <div className="flex justify-between">

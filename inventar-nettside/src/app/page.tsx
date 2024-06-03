@@ -1,15 +1,19 @@
 "use client";
-import { upload_items, get_items, loan_items } from "@/api/api";
+import { upload_items, get_items, loan_items, decode_jwt } from "@/api/api";
 import GroupedListItem from "@/components/GroupedListItem";
 import ListItem from "@/components/ListItem";
-import SortBy from "@/components/GroupBy";
-import { use, useEffect, useState } from "react";
+import GroupBy from "@/components/GroupBy";
+import { createContext, use, useEffect, useState } from "react";
+import Header from "@/components/Header";
+import FullItemList from "@/components/FullItemList";
 
 export default function Home() {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [sortBy, setSortBy] = useState("Ingen");
+  const [groupBy, setGroupBy] = useState("Ingen");
   const [groupedItems, setGroupedItems] = useState<{ [key: string]: any[] }>({});
+  const [username, setUsername] = useState('');
+  const UserContext = createContext('')
 
   const handleItemClick = (index: number) => {
     setSelectedItems(prevSelectedItems => {
@@ -27,12 +31,25 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const handleLoad = () => fetchItems();
+    const handleLoad = () => {
+      fetchItems();
+
+      if (!username) {
+        const token = localStorage.getItem('token');
+        if (token) {
+          decode_jwt(token).then(data => {
+            setUsername(data);
+          });
+        } else {
+          window.location.href = '/login';
+        }
+      }
+    };
     window.addEventListener("load", handleLoad);
   });
 
   useEffect(() => {
-    if (sortBy && items) {
+    if (groupBy && items) {
       const norwegianToEnglish: { [key: string]: string } = {
         "Produsent": "manufacturer",
         "Beskrivelse": "description",
@@ -42,23 +59,24 @@ export default function Home() {
         "Kategori": "category"
       };
   
-      const englishSortBy = norwegianToEnglish[sortBy];
+      const englishGroupBy = norwegianToEnglish[groupBy];
   
       const convertDate = (dateStr: string) => {
         const [day, month, year] = dateStr.split(".");
         return new Date(`${month}/${day}/${year}`).getTime();
       };
   
+      // sorts items
       const newSortedItems = [...items].sort((a, b) => {
-        if (englishSortBy === 'purchasePrice') {
-          return parseFloat(a[englishSortBy]) - parseFloat(b[englishSortBy]);
-        } else if (englishSortBy === 'purchaseDate') {
-          return convertDate(a[englishSortBy]) - convertDate(b[englishSortBy]);
+        if (englishGroupBy === 'purchasePrice') {
+          return parseFloat(a[englishGroupBy]) - parseFloat(b[englishGroupBy]);
+        } else if (englishGroupBy === 'purchaseDate') {
+          return convertDate(a[englishGroupBy]) - convertDate(b[englishGroupBy]);
         } else {
-          if (a[englishSortBy] < b[englishSortBy]) {
+          if (a[englishGroupBy] < b[englishGroupBy]) {
             return -1;
           }
-          if (a[englishSortBy] > b[englishSortBy]) {
+          if (a[englishGroupBy] > b[englishGroupBy]) {
             return 1;
           }
           return 0;
@@ -67,7 +85,7 @@ export default function Home() {
   
       // groups items
       const groupedItems = newSortedItems.reduce((groups: { [key: string]: any[] }, item) => {
-        const key = item[englishSortBy];
+        const key = item[englishGroupBy];
         if (!groups[key]) {
           groups[key] = [];
         }
@@ -83,11 +101,16 @@ export default function Home() {
   
       setGroupedItems(groupedItems);
     }
-  }, [sortBy, items]);
+  }, [groupBy, items]);
 
   return (
     <div>
+      <Header username={username} />
       <div>
+        <div>
+          <p>Logget inn som: {username}</p>
+          <p>Lån utstyr</p>
+        </div>
         <div>
           <p>valgt utstyr:</p> {(() => {
               const frequencyMap = selectedItems.reduce((acc, item) => {
@@ -113,45 +136,17 @@ export default function Home() {
           }}>Tøm valg</button>
         </div>
       </div>
-      <div>
-        <SortBy
-          groupByOptions={["Produsent", "Beskrivelse", "Innkjøpsdato", "Innkjøpspris", "Forventet levetid", "Kategori", "Ingen"]}
-          selectedGroupBy={sortBy}
-          setSelectedGroupBy={setSortBy}
-        />
-        <div>
-        {Object.keys(groupedItems).map((key, index) => (
-          sortBy === "Ingen" 
-            ? groupedItems[key].map((item: any, index: number) => (
-                <ListItem
-                  key={index}
-                  item={item}
-                  onClick={() => handleItemClick(item.id)}
-                  selected={selectedItems.includes(item.id)}
-                />
-              ))
-            : (
-              <GroupedListItem
-                key={index}
-                sortedBy={key}
-                items={groupedItems[key] as [{ 
-                  manufacturer: string; 
-                  description: string; 
-                  specifications: string; 
-                  purchaseDate: string; 
-                  purchasePrice: number; 
-                  expectedLifetime: number; 
-                  category: string; 
-                  id: string;
-                  loanedBy: string 
-                }]}
-                onClicks={groupedItems[key].map((item: any, index: number) => () => handleItemClick(groupedItems[key][index].id))}
-                selectedList={groupedItems[key].map((item: any, index: number) => selectedItems.includes(groupedItems[key][index].id))}
-              />
-            )
-        ))}
-        </div>
-      </div>
+      <FullItemList
+        groupByProps={{
+          groupByOptions: ["Ingen", "Produsent", "Beskrivelse", "Innkjøpsdato", "Innkjøpspris", "Forventet levetid", "Kategori"],
+          selectedGroupBy: groupBy,
+          setSelectedGroupBy: setGroupBy
+        }}
+        items={groupedItems}
+        sortBy={groupBy}
+        onClicks={items.map((item: any) => () => handleItemClick(item.id))}
+        selectedList={items.map((item: any) => selectedItems.includes(item.id))}
+      />
     </div>
   );
 }

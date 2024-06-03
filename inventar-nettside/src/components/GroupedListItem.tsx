@@ -4,7 +4,7 @@ import Image from "next/image";
 import ListItem from "./ListItem";
 
 type GroupedListProps = {
-    sortedBy: string,
+    groupedBy: string,
     items: [{
         manufacturer: string;
         description: string;
@@ -20,7 +20,7 @@ type GroupedListProps = {
     selectedList: boolean[]
 };
 
-const GroupedListItem= ({items, onClicks, selectedList, sortedBy}: GroupedListProps) => {
+const GroupedListItem= ({items, onClicks, selectedList, groupedBy}: GroupedListProps) => {
     const [dropdown, setDropdown] = useState(false);
 
     const handleClick = (event: React.MouseEvent) => {
@@ -31,7 +31,7 @@ const GroupedListItem= ({items, onClicks, selectedList, sortedBy}: GroupedListPr
     return (
         <div className="mx-1 border border-black cursor-pointer" onClick={handleClick}>
             <div className="flex justify-between p-1">
-                <p>{sortedBy}</p>
+                <p>{groupedBy}</p>
                 <Image src={down_arrow} alt="Down arrow" width={15} height={15} className={dropdown ? "transform rotate-180" : ""}/>
             </div>
             <div className="mt-1">

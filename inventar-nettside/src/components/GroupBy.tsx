@@ -8,7 +8,7 @@ type GroupProps = {
     setSelectedGroupBy: (GroupOption: string) => void;
 };
 
-const GroupBy= ({groupByOptions, selectedGroupBy, setSelectedGroupBy}: GroupProps) => {
+const GroupBy = ({groupByOptions, selectedGroupBy, setSelectedGroupBy}: GroupProps) => {
     const [dropdown, setDropdown] = useState(false);
 
     const handleClick = (event: React.MouseEvent) => {

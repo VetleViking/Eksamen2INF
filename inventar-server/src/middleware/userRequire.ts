@@ -12,9 +12,7 @@ const userRequireMiddleware = async (req, res, next) => {
 
     if (!excludedRoutes.some((route) => req.path.includes(route))) {
         try {
-            const token = req.cookies.token;
-
-            console.log(req.cookies.token);
+            const token = req.headers.authorization.split(' ')[1];
 
             if (!token) {
                 return res
