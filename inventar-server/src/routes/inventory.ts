@@ -17,7 +17,9 @@ router.post('/upload', async (req: Request, res: Response, next: NextFunction) =
                 purchaseDate: item.Innkjøpsdato,
                 purchasePrice: item.Innkjøpspris,
                 expectedLifetime: item['Forventet levetid (i år)'],
-                category: item.Kategori
+                category: item.Kategori,
+                id: item.id,
+                loanedBy: item.loanedBy
             };
 
             await redisClient.set(`inventory:${index}`, JSON.stringify(englishItem));

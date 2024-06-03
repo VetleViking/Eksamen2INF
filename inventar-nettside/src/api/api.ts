@@ -2,12 +2,20 @@ import { json } from "stream/consumers";
 import inventory_data from "../inventory_data_with_categories.json";
 
 export async function upload_items() {
+    // add id and loanedBy to each item
+    let inventory_data_w_all = inventory_data.map((item, index) => {
+        return {
+            ...item,
+            id: index,
+            loanedBy: null
+        };
+    });
     const response = await fetch(`http://localhost:4000/api/v1/inventory/upload`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ inventory_data })
+        body: JSON.stringify({ inventory_data: inventory_data_w_all })
     });
 
     return await response.json();
