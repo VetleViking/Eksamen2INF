@@ -3,13 +3,16 @@ import { get_items, loan_items, decode_jwt } from "@/api/api";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
+import Search from "@/components/Search";
 
 export default function Home() {
   const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [groupBy, setGroupBy] = useState("Ingen");
   const [groupedItems, setGroupedItems] = useState<{ [key: string]: any[] }>({});
   const [username, setUsername] = useState('');
+  const [search, setSearch] = useState('');
 
   const handleItemClick = (index: number) => {
     setSelectedItems(prevSelectedItems => {
@@ -24,6 +27,7 @@ export default function Home() {
   async function fetchItems() {
     const items = await get_items();
     setItems(items);
+    setFilteredItems(items.filter((item: { loanedBy: any }) => !item.loanedBy));
   }
 
   useEffect(() => {
@@ -46,8 +50,8 @@ export default function Home() {
     }
   }, [items, username]);
 
-  useEffect(() => {
-    if (groupBy && items) {
+  function sortItems() {
+    if (groupBy && filteredItems) {
       const norwegianToEnglish: { [key: string]: string } = {
         "Produsent": "manufacturer",
         "Beskrivelse": "description",
@@ -64,8 +68,6 @@ export default function Home() {
         return new Date(`${month}/${day}/${year}`).getTime();
       };
 
-      const filteredItems = items.filter((item: { loanedBy: any }) => !item.loanedBy);
-  
       // sorts items
       const newSortedItems = [...filteredItems].sort((a, b) => {
         if (englishGroupBy === 'purchasePrice') {
@@ -93,7 +95,6 @@ export default function Home() {
         return groups;
       }, {});
   
-
       // sorts items in groups by description
       Object.keys(groupedItems).forEach(group => {
         groupedItems[group].sort((a, b) => a.description.localeCompare(b.description));
@@ -101,7 +102,24 @@ export default function Home() {
   
       setGroupedItems(groupedItems);
     }
-  }, [groupBy, items]);
+  }
+
+  useEffect(() => {
+    sortItems();
+  }, [groupBy, items, filteredItems]);
+
+  useEffect(() => {
+    const newFilteredItems = items.filter((item: any) => {
+      const values = Object.values(item);
+      return values.some(value => {
+        const valueString = value !== null && value !== undefined ? value.toString() : '';
+        return valueString.toLowerCase().includes(search.toLowerCase());
+      });
+    });
+  
+    setFilteredItems(newFilteredItems);
+    sortItems();
+  }, [search, items]);
 
   return (
     <div>
@@ -143,6 +161,10 @@ export default function Home() {
           }}>Tøm valg</button>
         </div>
       </div>
+      <Search 
+        search={search}
+        setSearch={setSearch}
+      />
       <FullItemList
         groupByProps={{
           groupByOptions: ["Ingen", "Produsent", "Beskrivelse", "Innkjøpsdato", "Innkjøpspris", "Forventet levetid", "Kategori"],
