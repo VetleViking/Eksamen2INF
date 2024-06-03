@@ -4,7 +4,8 @@ import { verify_jwt } from "../utils/user";
 const userRequireMiddleware = async (req, res, next) => {
     const excludedRoutes = [
         'users/login',
-        'inventory/upload'
+        'inventory/upload',
+        'inventory/get'
     ];
     console.log('User Connected', req.ip);
 

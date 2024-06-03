@@ -2,7 +2,7 @@ import { json } from "stream/consumers";
 import inventory_data from "../inventory_data_with_categories.json";
 
 export async function upload_items() {
-    const response = await fetch(`http://localhost:4000/api/v1/items/upload`, {
+    const response = await fetch(`http://localhost:4000/api/v1/inventory/upload`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -13,6 +13,13 @@ export async function upload_items() {
     return await response.json();
 }
 
+export async function get_items() {
+    const response = await fetch(`http://localhost:4000/api/v1/inventory/get`, {
+        method: 'GET'
+    });
+
+    return await response.json();
+}
 
 export async function create_user(username: string, password: string) {
     const response = await fetch(`http://localhost:4000/api/v1/users/createuser`, {
