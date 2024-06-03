@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
 import Search from "@/components/Search";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -175,6 +176,7 @@ export default function Home() {
         onClicks={items.map((item: any) => () => handleItemClick(item.id))}
         selectedList={items.map((item: any) => selectedItems.includes(item.id))}
       />
+      <Footer />
     </div>
   );
 }
