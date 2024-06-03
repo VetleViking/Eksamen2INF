@@ -33,9 +33,23 @@ export async function loan_items(item_ids: number[], loaned_to: string) {
     const response = await fetch(`http://localhost:4000/api/v1/inventory/loan`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
         },
         body: JSON.stringify({ item_ids, loaned_to })
+    });
+
+    return await response.json();
+}
+
+export async function return_items(item_ids: number[]) {
+    const response = await fetch(`http://localhost:4000/api/v1/inventory/return`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ item_ids })
     });
 
     return await response.json();

@@ -27,22 +27,24 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const handleLoad = () => {
+    if (!items.length) {
       fetchItems();
+    }
 
-      if (!username) {
-        const token = localStorage.getItem('token');
-        if (token) {
-          decode_jwt(token).then(data => {
-            setUsername(data);
-          });
-        } else {
-          window.location.href = '/login';
-        }
+    if (!username) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        decode_jwt(token).then(data => {
+          setUsername(data);
+        }).catch(() => {
+          localStorage.removeItem('token');
+          window.location.href = '/login'
+      });
+      } else {
+        window.location.href = '/login';
       }
-    };
-    window.addEventListener("load", handleLoad);
-  });
+    }
+  }, [items, username]);
 
   useEffect(() => {
     if (groupBy && items) {
@@ -61,9 +63,11 @@ export default function Home() {
         const [day, month, year] = dateStr.split(".");
         return new Date(`${month}/${day}/${year}`).getTime();
       };
+
+      const filteredItems = items.filter((item: { loanedBy: any }) => !item.loanedBy);
   
       // sorts items
-      const newSortedItems = [...items].sort((a, b) => {
+      const newSortedItems = [...filteredItems].sort((a, b) => {
         if (englishGroupBy === 'purchasePrice') {
           return parseFloat(a[englishGroupBy]) - parseFloat(b[englishGroupBy]);
         } else if (englishGroupBy === 'purchaseDate') {
@@ -129,7 +133,10 @@ export default function Home() {
         </div>
         <div>
           <button onClick={() => {
-            loan_items(selectedItems, "test");
+            loan_items(selectedItems, username).then(() => {
+              setSelectedItems([]);
+              fetchItems();
+            });
           }}>Lån ut</button>
           <button onClick={() => {
             setSelectedItems([]);

@@ -1,5 +1,5 @@
 "use client";
-import { get_items, loan_items, decode_jwt } from "@/api/api";
+import { get_items, decode_jwt, return_items } from "@/api/api";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
@@ -27,22 +27,24 @@ export default function Loans() {
   }
 
   useEffect(() => {
-    const handleLoad = () => {
+    if (!items.length) {
       fetchItems();
+    }
 
-      if (!username) {
-        const token = localStorage.getItem('token');
-        if (token) {
-          decode_jwt(token).then(data => {
-            setUsername(data);
-          });
-        } else {
-          window.location.href = '/login';
-        }
+    if (!username) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        decode_jwt(token).then(data => {
+          setUsername(data);
+        }).catch(() => {
+            localStorage.removeItem('token');
+            window.location.href = '/login'
+        });
+      } else {
+        window.location.href = '/login';
       }
-    };
-    window.addEventListener("load", handleLoad);
-  });
+    }
+  }, [items, username]);
 
   useEffect(() => {
     if (groupBy && items) {
@@ -61,9 +63,11 @@ export default function Loans() {
         const [day, month, year] = dateStr.split(".");
         return new Date(`${month}/${day}/${year}`).getTime();
       };
+
+      const filteredItems = items.filter((item: { loanedBy: any }) => item.loanedBy === username);
   
       // sorts items
-      const newSortedItems = [...items].sort((a, b) => {
+      const newSortedItems = [...filteredItems].sort((a, b) => {
         if (englishGroupBy === 'purchasePrice') {
           return parseFloat(a[englishGroupBy]) - parseFloat(b[englishGroupBy]);
         } else if (englishGroupBy === 'purchaseDate') {
@@ -109,7 +113,6 @@ export default function Loans() {
             localStorage.removeItem('token');
             window.location.href = '/login';
           }}>Logg ut</button>
-          <p>Lån utstyr</p>
         </div>
         <div>
           <p>valgt utstyr:</p> {(() => {
@@ -129,8 +132,23 @@ export default function Loans() {
         </div>
         <div>
           <button onClick={() => {
-            loan_items(selectedItems, "test");
-          }}>Lån ut</button>
+            return_items(selectedItems).then(() => {
+                setSelectedItems([]);
+                fetchItems()
+            });
+          }}>Lever inn</button>
+          <button onClick={() => {
+            Object.values(groupedItems).forEach((group: any[]) => {
+                group.forEach((item: any) => {
+                    setSelectedItems(prevSelectedItems => {
+                        if (!prevSelectedItems.includes(item.id)) {
+                            return [...prevSelectedItems, item.id];
+                        }
+                        return prevSelectedItems;
+                    });
+                });
+            });
+            }}>Velg alt</button>
           <button onClick={() => {
             setSelectedItems([]);
           }}>Tøm valg</button>
