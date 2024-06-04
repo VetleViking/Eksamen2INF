@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
 import Search from "@/components/Search";
 import Footer from "@/components/Footer";
+import Button from "./Button";
+import GroupBy from "./GroupBy";
 
 type FullListSearchProps = {
     type: string,
@@ -118,10 +120,11 @@ const FullListSearch= ({type, username}: FullListSearchProps) => {
   }, [search, items]);
 
   return (
-    <div>
+    <div className="mb-4">
       <div>
-        <div>
-          <p>valgt utstyr:</p> {(() => {
+        <div className="gap-4 m-4">
+          <p className="text-center text-xl font-semibold mb-2">valgt utstyr:</p>
+          <div className="">{(() => {
               const frequencyMap = selectedItems.reduce((acc, item) => {
                 const description = (items[item] as { description: string }).description;
                 acc[description] = (acc[description] || 0) + 1;
@@ -134,58 +137,68 @@ const FullListSearch= ({type, username}: FullListSearchProps) => {
                   {frequencyMap[description] > 1 ? ` x${frequencyMap[description]}` : ''}
                 </p>
               ));
-            })()}
+            })()}</div>
         </div>
-        <div>
-          <button onClick={() => {
-            type === 'loan' ? (
-            loan_items(selectedItems, username).then(() => {
-              setSelectedItems([]);
-              fetchItems();
-            })) : type === 'loans' ? (
-            return_items(selectedItems).then(() => {
-                setSelectedItems([]);
-                fetchItems()
-            })) : type === 'admin' ? (
-            remove_items(selectedItems).then(() => {
-                setSelectedItems([]);
-                fetchItems();
-            })) : null;
-          }}>{
-           type === 'loan' ? "Lån ut" :  type === 'loans' ? "Lever inn" : type === 'admin' ? "Fjern" : ""
-          }</button>
-          <button onClick={() => {
-            Object.values(groupedItems).forEach((group: any[]) => {
-                group.forEach((item: any) => {
-                    setSelectedItems(prevSelectedItems => {
-                        if (!prevSelectedItems.includes(item.id)) {
-                            return [...prevSelectedItems, item.id];
-                        }
-                        return prevSelectedItems;
+        <div className="flex gap-4 m-4">
+            <Button 
+                text={
+                    type === 'loan' ? "Lån ut" :  type === 'loans' ? "Lever inn" : type === 'admin' ? "Fjern" : ""
+                }
+                onClick={() => {
+                    type === 'loan' ? (
+                        loan_items(selectedItems, username).then(() => {
+                        setSelectedItems([]);
+                        fetchItems();
+                    })) : type === 'loans' ? (
+                    return_items(selectedItems).then(() => {
+                        setSelectedItems([]);
+                        fetchItems()
+                    })) : type === 'admin' ? (
+                    remove_items(selectedItems).then(() => {
+                        setSelectedItems([]);
+                        fetchItems();
+                    })) : null;
+                }}/>
+            <Button 
+                text="Velg alle"
+                onClick={() => {
+                    Object.values(groupedItems).forEach((group: any[]) => {
+                        group.forEach((item: any) => {
+                            setSelectedItems(prevSelectedItems => {
+                                if (!prevSelectedItems.includes(item.id)) {
+                                    return [...prevSelectedItems, item.id];
+                                }
+                                return prevSelectedItems;
+                            });
+                        });
                     });
-                });
-            });
-          }}>Velg alt</button>
-          <button onClick={() => {
-            setSelectedItems([]);
-          }}>Tøm valg</button>
+                }}/>
+            <Button 
+                text="Fjern alle"
+                onClick={() => {
+                    setSelectedItems([]);
+                }}/>
         </div>
       </div>
-      <Search 
-        search={search}
-        setSearch={setSearch}
-      />
-      <FullItemList
-        groupByProps={{
-          groupByOptions: ["Ingen", "Produsent", "Beskrivelse", "Innkjøpsdato", "Innkjøpspris", "Forventet levetid", "Kategori"],
-          selectedGroupBy: groupBy,
-          setSelectedGroupBy: setGroupBy
-        }}
-        items={groupedItems}
-        sortBy={groupBy}
-        onClicks={items.map((item: any) => () => handleItemClick(item.id))}
-        selectedList={items.map((item: any) => selectedItems.includes(item.id))}
-      />
+      <div className="flex-col md:flex-row flex justify-between m-3 gap-4">
+        <Search 
+            search={search}
+            setSearch={setSearch}
+        />
+        <GroupBy
+            groupByOptions={["Ingen", "Produsent", "Beskrivelse", "Innkjøpsdato", "Innkjøpspris", "Forventet levetid", "Kategori"]}
+            selectedGroupBy={groupBy}
+            setSelectedGroupBy={setGroupBy}
+        />
+      </div>
+      <div className="mx-3">
+        <FullItemList
+            items={groupedItems}
+            sortBy={groupBy}
+            onClicks={items.map((item: any) => () => handleItemClick(item.id))}
+            selectedList={items.map((item: any) => selectedItems.includes(item.id))}
+        />
+      </div>
     </div>
   );
 }

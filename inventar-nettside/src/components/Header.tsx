@@ -5,7 +5,10 @@ import Link from "next/link";
 
 const Header = () => {
     return (
-        <div className="border-b-2 border-t-[16px] border-b-secondary border-t-main">
+        <div className="border-b-2 border-b-secondary">
+            <div className="bg-main p-1 flex justify-end text-white pr-12">
+                <Link href={"/admin"}>Adminpanel</Link>
+            </div>
             <div className="flex justify-between px-8 items-center">
                 <Link href={"/"}>
                 <Image src={logo} alt="Innlandet fylkeskommune logo" width={180} height={100}/>

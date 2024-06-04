@@ -31,7 +31,7 @@ const GroupedListItem= ({items, onClicks, selectedList, groupedBy}: GroupedListP
     return (
         <div className="mx-1 border border-black cursor-pointer" onClick={handleClick}>
             <div className="flex justify-between p-1">
-                <p>{groupedBy}</p>
+                <p className="text-lg font-medium">{groupedBy}</p>
                 <Image src={down_arrow} alt="Down arrow" width={15} height={15} className={dropdown ? "transform rotate-180" : ""}/>
             </div>
             <div className="mt-1">

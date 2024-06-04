@@ -16,6 +16,7 @@ const config: Config = {
         "main": "#005850",
         "secondary": "#009d4f",
         "tertiary": "#cfd2d3",
+        "quaternary": "#e6e6e6",
       },
     }, 
   },

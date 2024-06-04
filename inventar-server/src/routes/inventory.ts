@@ -1,11 +1,20 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { redisClient } from '../redis-source';
+import { verify_jwt } from '../utils/user';
 
 const router = Router();
 
 router.post('/upload', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { inventory_data } = req.body;
+
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
 
         let index = parseInt(await redisClient.get(`inventory_data_index`)) || 0;
 
@@ -54,6 +63,14 @@ router.get('/getloaned', async (req: Request, res: Response, next: NextFunction)
     try {
         let index = parseInt(await redisClient.get(`inventory_data_index`)) || 0;
         let inventory_data = {};
+
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
 
         for (let i = 0; i < index; i++) {
             const item = await redisClient.get(`inventory:${i}`);

@@ -75,6 +75,32 @@ export async function return_items(item_ids: number[]) {
     return await response.json();
 }
 
+export async function get_users() {
+    const response = await fetch(`http://localhost:4000/api/v1/users/getall`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    });
+
+    return await response.json();
+}
+
+export async function make_admin(username: string) {
+    const response = await fetch(`http://localhost:4000/api/v1/users/makeadmin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ username })
+    });
+
+    return await response.json();
+}
+
+
 export async function create_user(username: string, password: string) {
     const response = await fetch(`http://localhost:4000/api/v1/users/createuser`, {
         method: 'POST',

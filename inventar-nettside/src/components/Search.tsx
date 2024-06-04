@@ -8,9 +8,9 @@ type SearchProps = {
 const Search = ({ search, setSearch }: SearchProps) => {    
     return (
         <input
-            className="mx-1 p-1 border border-black"
+            className="mx-1 p-2 border border-black text-xl rounded-sm"
             type="text"
-            placeholder="Search..."
+            placeholder="Søk..."
             value={search}
 
             onChange={(e) => {

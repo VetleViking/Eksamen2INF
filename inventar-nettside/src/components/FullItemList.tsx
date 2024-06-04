@@ -5,25 +5,16 @@ import ListItem from "./ListItem";
 import { on } from "events";
 
 type FullItemListProps = {
-    groupByProps: {
-        groupByOptions: string[];
-        selectedGroupBy: string;
-        setSelectedGroupBy: (GroupOption: string) => void;
-    },
     items: { [key: string]: any[] },
     sortBy: string,
     onClicks: (() => void)[],
     selectedList: boolean[]
 };
 
-const FullItemList = ({ groupByProps, items, sortBy, onClicks, selectedList }: FullItemListProps) => {
+const FullItemList = ({ items, sortBy, onClicks, selectedList }: FullItemListProps) => {
     return (
         <div>
-            <GroupBy
-            groupByOptions={groupByProps.groupByOptions}
-            selectedGroupBy={groupByProps.selectedGroupBy}
-            setSelectedGroupBy={groupByProps.setSelectedGroupBy}
-            />
+            
             <div>
             {Object.keys(items).map((key: string, index: number) => (
             sortBy === "Ingen" 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FullListSearch from "@/components/FullListSearch";
+import Button from "@/components/Button";
 
 export default function Home() {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ export default function Home() {
       const token = localStorage.getItem('token');
       if (token) {
         decode_jwt(token).then(data => {
-          setUsername(data);
+          setUsername(data.username);
         }).catch(() => {
           localStorage.removeItem('token');
           window.location.href = '/login'
@@ -27,18 +28,24 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <div>
-          <p>Logget inn som: {username}</p>
-          <button onClick={() => {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-          }}>Logg ut</button>
-          <p>Lån utstyr</p>
+      <div className="bg-quaternary p-4">
+        <div className="">
+          <p className="text-xl">Du er logget inn som: {username}</p>
+          <Button 
+            text="Logg ut"
+            onClick={() => {
+              localStorage.removeItem('token');
+              window.location.href = '/login';
+            }}/>
         </div>
-        <FullListSearch 
-          type="loan"
-          username={username}
-        />
+        <div className=" flex justify-center my-8">
+          <p className="text-3xl font-semibold">Lån utstyr</p>
+        </div>
+      </div>
+      <FullListSearch 
+        type="loan"
+        username={username}
+      />
       <Footer />
     </div>
   );

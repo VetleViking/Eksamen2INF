@@ -13,7 +13,7 @@ export default function Home() {
       const token = localStorage.getItem('token');
       if (token) {
         decode_jwt(token).then(data => {
-          setUsername(data);
+          setUsername(data.username);
         }).catch(() => {
           localStorage.removeItem('token');
           window.location.href = '/login'

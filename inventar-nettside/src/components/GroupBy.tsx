@@ -17,14 +17,14 @@ const GroupBy = ({groupByOptions, selectedGroupBy, setSelectedGroupBy}: GroupPro
     
     if (dropdown) {
         return (
-            <div className="border border-black p-1 cursor-pointer m-1" onClick={handleClick}>
-                <div className="flex justify-between">
-                    <p>Grupper etter: {selectedGroupBy}</p>
+            <div className="mx-1 p-2 border border-black text-xl rounded-sm" onClick={handleClick}>
+                <div className="flex justify-between gap-8">
+                    <p className="text-xl font-semibold">Grupper etter: {selectedGroupBy}</p>
                     <Image src={down_arrow} alt="Down arrow" width={15} height={15} className="transform rotate-180"/>
                 </div>
-                <div className="mt-1">
+                <div className="bg-white absolute mt-2 ml-[-9px] w-max">
                     {groupByOptions.map((option, index) => (
-                        <p className="border border-black p-1" key={index} onClick={() => setSelectedGroupBy(option)}>{option}</p>
+                        <p className="border border-black p-1 cursor-pointer" key={index} onClick={() => setSelectedGroupBy(option)}>{option}</p>
                     ))}
                 </div>
             </div>
@@ -32,9 +32,9 @@ const GroupBy = ({groupByOptions, selectedGroupBy, setSelectedGroupBy}: GroupPro
     }
 
     return (
-        <div className="border border-black p-1 cursor-pointer m-1" onClick={handleClick}>
-            <div className="flex justify-between">
-                <p>Grupper etter: {selectedGroupBy}</p>
+        <div className="mx-1 p-2 border border-black text-xl rounded-sm" onClick={handleClick}>
+            <div className="flex justify-between gap-8">
+                <p className="text-xl font-semibold">Grupper etter: {selectedGroupBy}</p>
                 <Image src={down_arrow} alt="Down arrow" width={15} height={15}/>
             </div>
         </div>
