@@ -1,6 +1,7 @@
 "use client";
 import { create_user, login } from "@/api/api";
 import { useState } from "react";
+import Button from "./Button";
 
 const CreateUser = () => {   
     const [username, setUsername] = useState('');
@@ -23,8 +24,6 @@ const CreateUser = () => {
             setErrormessage(data.message);
         }
     }
-
-
     
     return (
        <div className="flex flex-col gap-2">
@@ -46,8 +45,9 @@ const CreateUser = () => {
                     setPassword(e.target.value);
                 }} />
                 
-            <button 
-                onClick={() => {create_user_handler(username, password)}}>Lag bruker</button>
+            <Button
+                text="Lag bruker" 
+                onClick={() => {create_user_handler(username, password)}} />
             <p className="text-[#e72328] text-center font-ListComponent">{errormessage}</p>
         </div>
     );

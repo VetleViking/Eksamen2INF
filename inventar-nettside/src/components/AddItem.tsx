@@ -19,7 +19,7 @@ const AddItem = () => {
                 <input className="border border-black p-1" type="text" placeholder="Spesifikasjoner" value={specifications} onChange={(e) => setSpecifications(e.target.value)}/>
                 <div className="flex justify-between">
                     <input className="border border-black p-1" type="date" placeholder="Innkjøpsdato" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)}/>
-                    <button className="bg-main text-white px-2 rounded-md border-4 border-main hover:bg-white hover:text-main transition duration-300 ease-in-out" onClick={() => {
+                    <button className="bg-main text-white px-2 rounded-md border-4 border-main hover:bg-white hover:text-main transition duration-300 ease-in-out min-w-max" onClick={() => {
                         const today = new Date();
                         const month = (today.getMonth() + 1).toString().padStart(2, '0');
                         const date = today.getDate().toString().padStart(2, '0');

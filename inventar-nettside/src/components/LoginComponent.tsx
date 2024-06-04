@@ -1,5 +1,6 @@
 import { login } from "@/api/api";
 import { useState } from "react";
+import Button from "./Button";
 
 const LoginComponent = () => {   
     const [username, setUsername] = useState('');
@@ -37,8 +38,9 @@ const LoginComponent = () => {
                     setPassword(e.target.value);
                 }} />
 
-            <button 
-                onClick={() => {login_handler(username, password)}}>Logg inn</button>
+            <Button
+                text="Logg inn" 
+                onClick={() => {login_handler(username, password)}} />
             <p className="text-red-500 text-center">{errormessage}</p>
         </div>
     );

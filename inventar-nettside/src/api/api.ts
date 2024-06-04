@@ -100,6 +100,18 @@ export async function make_admin(username: string) {
     return await response.json();
 }
 
+export async function remove_admin(username: string) {
+    const response = await fetch(`http://localhost:4000/api/v1/users/removeadmin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ username })
+    });
+
+    return await response.json();
+}
 
 export async function create_user(username: string, password: string) {
     const response = await fetch(`http://localhost:4000/api/v1/users/createuser`, {
@@ -108,6 +120,19 @@ export async function create_user(username: string, password: string) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ username, password })
+    });
+
+    return await response.json();
+}
+
+export async function delete_user(username: string) {
+    const response = await fetch(`http://localhost:4000/api/v1/users/deleteuser`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ username })
     });
 
     return await response.json();

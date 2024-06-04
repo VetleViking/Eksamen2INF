@@ -54,6 +54,38 @@ router.post('/createuser', async (req: Request, res: Response, next: NextFunctio
     }
 });
 
+router.post('/deleteuser', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        const { username } = req.body;
+
+        if (!username) {
+            res.status(400).json({ message: 'Username is required' });
+            return;
+        }
+
+        const userExists = await redisClient.hGet('users', username);
+        if (!userExists) {
+            res.status(400).json({ message: 'User does not exist' });
+            return;
+        }
+
+        await redisClient.hDel('users', username);
+        await redisClient.hDel('admins', username);
+
+        res.status(200).json({ message: 'User deleted' });
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.get('/getall', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -81,6 +113,14 @@ router.get('/getall', async (req: Request, res: Response, next: NextFunction) =>
 
 router.post('/makeadmin', async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
         const { username } = req.body;
 
         if (!username) {
@@ -97,6 +137,37 @@ router.post('/makeadmin', async (req: Request, res: Response, next: NextFunction
         await redisClient.hSet('admins', username, 'true');
 
         res.status(200).json({ message: 'User is now an admin' });
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/removeadmin', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        const { username } = req.body;
+
+        if (!username) {
+            res.status(400).json({ message: 'Username is required' });
+            return;
+        }
+
+        const userExists = await redisClient.hGet('users', username);
+        if (!userExists) {
+            res.status(400).json({ message: 'User does not exist' });
+            return;
+        }
+
+        await redisClient.hDel('admins', username);
+
+        res.status(200).json({ message: 'User is no longer an admin' });
     } catch(err) {
         next(err);
     }
