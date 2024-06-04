@@ -1,21 +1,25 @@
-import { json } from "stream/consumers";
-import inventory_data from "../inventory_data_with_categories.json";
+export async function add_items(items: { manufacturer: string, description: string, specifications: string, purchaseDate: string, purchasePrice: number, expectedLifetime: number, category: string}[], ) {
 
-export async function upload_items() {
-    // add id and loanedBy to each item
-    let inventory_data_w_all = inventory_data.map((item, index) => {
-        return {
-            ...item,
-            id: index,
-            loanedBy: null
-        };
-    });
     const response = await fetch(`http://localhost:4000/api/v1/inventory/upload`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
         },
-        body: JSON.stringify({ inventory_data: inventory_data_w_all })
+        body: JSON.stringify({ items })
+    });
+
+    return await response.json();
+}
+
+export async function remove_items(item_ids: number[]) {
+    const response = await fetch(`http://localhost:4000/api/v1/inventory/remove`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ item_ids })
     });
 
     return await response.json();
@@ -23,7 +27,23 @@ export async function upload_items() {
 
 export async function get_items() {
     const response = await fetch(`http://localhost:4000/api/v1/inventory/get`, {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    });
+
+    return await response.json();
+}
+
+export async function get_loaned_items() {
+    const response = await fetch(`http://localhost:4000/api/v1/inventory/getloaned`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        }
     });
 
     return await response.json();
