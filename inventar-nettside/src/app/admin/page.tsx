@@ -1,5 +1,5 @@
 "use client";
-import { decode_jwt, get_loaned_items, get_users, make_admin } from "@/api/api";
+import { decode_jwt, delete_user, get_loaned_items, get_users, make_admin, remove_admin } from "@/api/api";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -83,7 +83,7 @@ export default function Home() {
                         <p className="text-3xl font-semibold">Adminpanel</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-2">
+                <div className="lg:grid grid-cols-2">
                     <div className="my-4">
                         <div>
                             <p className="text-2xl font-semibold text-center my-4">Legg til utstyr</p>
@@ -122,21 +122,41 @@ export default function Home() {
                                 <p className="text-center">Ingen utlånt utstyr</p>
                             )}
                         </div>
-                        <div className="mx-3">
-                            <p className="text-2xl font-semibold text-center my-4">Gjør bruker til admin-bruker</p>
+                        <div className="mx-4">
+                            <p className="text-2xl font-semibold text-center my-4">Administrer brukere</p>
                             {users.map((user: any, index: number) => (
-                                user.admin ? null : (
-                                    <div className="border border-black p-1 m-1" key={index}>
-                                        <p className="p-1 border border-black mb-1">{user.username}</p>
+                                <div className="border border-black p-1 m-1" key={index}>
+                                    <div className="p-1 border border-black mb-1 flex justify-between">
+                                        <p>{user.username}</p>
+                                        <p>{user.admin? "admin" : "ikke admin"}</p>
+                                    </div>
+                                    <div className="flex gap-4">
+                                    <Button
+                                        text="Slett bruker" 
+                                        onClick={() => {
+                                            delete_user(user.username).then(() => {
+                                                fetchItems();
+                                            });
+                                        }}/>
+                                    {user.admin ? 
+                                        <Button
+                                            text="Fjern admin" 
+                                            onClick={() => {
+                                                remove_admin(user.username).then(() => {
+                                                    fetchItems();
+                                                });
+                                            }}/> : (
                                         <Button
                                             text="Gjør til admin" 
                                             onClick={() => {
                                                 make_admin(user.username).then(() => {
                                                     fetchItems();
                                                 });
-                                            }}/>
-                                    </div>)
-                            ))}
+                                            }}/>)}
+                                    
+                                    </div>
+                                </div>)
+                            )}
                         </div>
                     </div>
                     <div className="my-4">

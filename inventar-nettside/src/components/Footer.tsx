@@ -1,12 +1,12 @@
 import Image from "next/image";
 import React from "react";
-import logo from "../images/innlandet-fylkeskommune.svg";
+import logo2 from "../images/hamar-katedralskole.png";
 
 const Footer = () => {    
     return (
         <div className="bg-main text-white p-8">
-            <Image className="my-12" src={logo} alt="Innlandet fylkeskommune logo" width={150} height={100}/>
-            <div className="grid grid-cols-2 gap-4">
+            <Image className="my-12" src={logo2} alt="Innlandet fylkeskommune logo" width={150} height={100}/>
+            <div className="md:grid grid-cols-2 gap-4">
                 <div>
                     <p className="text-2xl font-semibold border-b border-white">Kontakt oss</p>
                     <p  className="my-5">Telefon: 62 54 42 00</p>
@@ -63,7 +63,7 @@ const Footer = () => {
                     <a className="underline cursor-pointer" href="https://www.instagram.com/hamarkatedralskole1153/">Instagram</a>
                 </div>
                 <div className="flex justify-center items-center m-12">
-                    <Image src={logo} alt="Innlandet fylkeskommune logo" width={150} height={100}/>
+                    <Image src={logo2} alt="Innlandet fylkeskommune logo" width={150} height={100}/>
                 </div>
             </div>
             <div className="border-t border-white">

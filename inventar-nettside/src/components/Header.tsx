@@ -9,8 +9,8 @@ const Header = () => {
             <div className="bg-main p-1 flex justify-end text-white pr-12">
                 <Link href={"/admin"}>Adminpanel</Link>
             </div>
-            <div className="flex justify-between px-8 items-center">
-                <Link href={"/"}>
+            <div className="flex justify-center md:justify-between px-8 items-center">
+                <Link href={"/"} className="hidden md:block">
                 <Image src={logo} alt="Innlandet fylkeskommune logo" width={180} height={100}/>
                 </Link>
                 <div className="flex items-center">
