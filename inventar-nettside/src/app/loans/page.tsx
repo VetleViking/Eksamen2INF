@@ -30,20 +30,20 @@ export default function Home() {
       <Header />
       <div className="bg-quaternary p-4">
         <div>
-          <p className="text-xl font-medium">Du er logget inn som: {username}</p>
-          <Button 
-            text="Logg ut"
+          <p className="text-xl font-medium">Logget inn som: {username}</p>
+          <Button
+            text="Logg ut" 
             onClick={() => {
               localStorage.removeItem('token');
               window.location.href = '/login';
             }}/>
         </div>
         <div className=" flex justify-center my-8">
-          <p className="text-3xl font-semibold">Lån utstyr</p>
+          <p className="text-3xl font-semibold">Dine lånte utstyr</p>
         </div>
       </div>
       <FullListSearch 
-        type="loan"
+        type="loans"
         username={username}
       />
       <Footer />

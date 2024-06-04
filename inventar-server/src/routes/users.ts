@@ -54,6 +54,54 @@ router.post('/createuser', async (req: Request, res: Response, next: NextFunctio
     }
 });
 
+router.get('/getall', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        const users = await redisClient.hGetAll('users');
+
+        const usernames = Object.keys(users);
+        const admins = await redisClient.hGetAll('admins');
+
+        const usernamesWithAdmin = usernames.map(username => {
+            return { username, admin: admins[username] ? true : false };
+        });
+
+        res.status(200).json(usernamesWithAdmin);
+    } catch(err) {
+        next(err);
+    }
+});
+
+router.post('/makeadmin', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { username } = req.body;
+
+        if (!username) {
+            res.status(400).json({ message: 'Username is required' });
+            return;
+        }
+
+        const userExists = await redisClient.hGet('users', username);
+        if (!userExists) {
+            res.status(400).json({ message: 'User does not exist' });
+            return;
+        }
+
+        await redisClient.hSet('admins', username, 'true');
+
+        res.status(200).json({ message: 'User is now an admin' });
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.post('/decodejwt', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { token } = req.body;
@@ -65,7 +113,9 @@ router.post('/decodejwt', async (req: Request, res: Response, next: NextFunction
 
         const decoded = await verify_jwt(token);
 
-        res.status(200).json(decoded.username);
+        const isAdmin = await redisClient.hGet('admins', decoded.username) ? true : false; 
+
+        res.status(200).json({ username: decoded.username, admin: isAdmin });
     } catch(err) {
         next(err);
     }

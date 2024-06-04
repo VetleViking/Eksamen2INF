@@ -4,15 +4,15 @@ import { verify_jwt } from "../utils/user";
 const userRequireMiddleware = async (req, res, next) => {
     const excludedRoutes = [
         'users/login',
-        'messages/createmessage'
+        'inventory/upload',
+        'inventory/get',
+        'users/createuser',
     ];
     console.log('User Connected', req.ip);
 
     if (!excludedRoutes.some((route) => req.path.includes(route))) {
         try {
-            const token = req.cookies.token;
-
-            console.log(req.cookies.token);
+            const token = req.headers.authorization.split(' ')[1];
 
             if (!token) {
                 return res
