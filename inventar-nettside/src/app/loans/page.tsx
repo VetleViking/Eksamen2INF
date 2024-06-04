@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FullListSearch from "@/components/FullListSearch";
+import Button from "@/components/Button";
 
 export default function Home() {
   const [username, setUsername] = useState('');
@@ -27,18 +28,24 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <div>
-          <p>Logget inn som: {username}</p>
-          <button onClick={() => {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-          }}>Logg ut</button>
-          <p>Lån utstyr</p>
+      <div className="bg-quaternary p-4">
+        <div>
+          <p className="text-xl font-medium">Logget inn som: {username}</p>
+          <Button
+            text="Logg ut" 
+            onClick={() => {
+              localStorage.removeItem('token');
+              window.location.href = '/login';
+            }}/>
         </div>
-        <FullListSearch 
-          type="loans"
-          username={username}
-        />
+        <div className=" flex justify-center my-8">
+          <p className="text-3xl font-semibold">Dine lånte utstyr</p>
+        </div>
+      </div>
+      <FullListSearch 
+        type="loans"
+        username={username}
+      />
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 import { add_items } from "@/api/api";
 import React, { useState } from "react";
+import Button from "./Button";
 
 const AddItem = () => {
     const [manufacturer, setManufacturer] = useState('');
@@ -11,24 +12,23 @@ const AddItem = () => {
     const [category, setCategory] = useState('');
     
     return (
-        <div className="flex flex-col items-center">
-            <p>Legg til utstyr</p>
+        <div className="flex flex-col items-center mx-4">
             <div className="grid grid-cols-2 w-full gap-2">
-                <input className="border border-black" type="text" placeholder="Produsent" value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}/>
-                <input className="border border-black" type="text" placeholder="Beskrivelse" value={description} onChange={(e) => setDescription(e.target.value)}/>
-                <input className="border border-black" type="text" placeholder="Spesifikasjoner" value={specifications} onChange={(e) => setSpecifications(e.target.value)}/>
+                <input className="border border-black p-1" type="text" placeholder="Produsent" value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}/>
+                <input className="border border-black p-1" type="text" placeholder="Beskrivelse" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                <input className="border border-black p-1" type="text" placeholder="Spesifikasjoner" value={specifications} onChange={(e) => setSpecifications(e.target.value)}/>
                 <div className="flex justify-between">
-                    <input className="border border-black" type="date" placeholder="Innkjøpsdato" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)}/>
-                    <button className="border border-black px-4" onClick={() => {
+                    <input className="border border-black p-1" type="date" placeholder="Innkjøpsdato" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)}/>
+                    <button className="bg-main text-white px-2 rounded-md border-4 border-main hover:bg-white hover:text-main transition duration-300 ease-in-out" onClick={() => {
                         const today = new Date();
                         const month = (today.getMonth() + 1).toString().padStart(2, '0');
                         const date = today.getDate().toString().padStart(2, '0');
                         setPurchaseDate(`${today.getFullYear()}-${month}-${date}`);
                     }}>I dag</button>
                 </div>
-                <input className="border border-black" type="number" placeholder="Innkjøpspris" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)}/>
-                <input className="border border-black" type="number" placeholder="Forventet levetid" value={expectedLifetime} onChange={(e) => setExpectedLifetime(e.target.value)}/>
-                <select className="border border-black" value={category} onChange={(e) => setCategory(e.target.value)}>
+                <input className="border border-black p-1" type="number" placeholder="Innkjøpspris" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)}/>
+                <input className="border border-black p-1" type="number" placeholder="Forventet levetid" value={expectedLifetime} onChange={(e) => setExpectedLifetime(e.target.value)}/>
+                <select className="border border-black p-1" value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">Kategori</option>
                     <option value="Bærbare Datamaskiner">Bærbare Datamaskiner</option>
                     <option value="Datamaskiner">Datamaskiner</option>
@@ -39,7 +39,8 @@ const AddItem = () => {
                     <option value="Skrivere">Skrivere</option>
                 </select>
             </div>
-            <button
+            <Button
+                text="Legg til"
                 onClick={() => {
                     if (!manufacturer || !description || !specifications || !purchaseDate || !purchasePrice || !expectedLifetime || !category) {
                         return;
@@ -50,7 +51,7 @@ const AddItem = () => {
                     const convertedDate = `${date}.${month}.${dateSelected.getFullYear()}`;
                     add_items([{ manufacturer, description, specifications, purchaseDate: convertedDate, purchasePrice: Number(purchasePrice), expectedLifetime: Number(expectedLifetime), category }]);
                 }}
-            >Legg til</button>
+            />
         </div>
     );
 };

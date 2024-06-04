@@ -8,6 +8,7 @@ import AddItem from "@/components/AddItem";
 import ListItem from "@/components/ListItem";
 import down_arrow from "../../images/down-arrow.svg";
 import Image from "next/image";
+import Button from "@/components/Button";
 
 export default function Home() {
     const [username, setUsername] = useState('');
@@ -66,75 +67,88 @@ export default function Home() {
 
     return (
         <div>
-        <Header />
-        <div className="grid grid-cols-2">
-            <p>Logget inn som: {username}</p>
-            <button onClick={() => {
-                localStorage.removeItem('token');
-                window.location.href = '/login';
-            }}>Logg ut</button>
-                <div>
+            <Header />
+            <div>
+                <div className="bg-quaternary p-4">
                     <div>
-                        <p>Legg til utstyr</p>
-                        <AddItem />
+                        <p className="text-xl font-medium">Du er logget inn som: {username}</p>
+                        <Button 
+                            text="Logg ut"
+                            onClick={() => {
+                            localStorage.removeItem('token');
+                            window.location.href = '/login';
+                            }}/>
                     </div>
-                    <div>
-                    <p>Utlånt utstyr</p>
-                    {Object.keys(loanedItems).length ? (
+                    <div className=" flex justify-center my-8">
+                        <p className="text-3xl font-semibold">Adminpanel</p>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2">
+                    <div className="my-4">
                         <div>
-                            {Object.keys(loanedItems).map((loanedBy: any) => (
-                                <div className="border border-black py-1 m-1" key={loanedBy} onClick={() => handleItemClick(loanedBy)}>
-                                    <div className="flex justify-between px-1">
-                                        <p>{loanedBy}</p>
-                                        <Image src={down_arrow} alt="Down arrow" width={15} height={15} className={`transform ${dropdowns.includes(loanedBy) ? 'rotate-180' : ''}`}/>
-                                    </div>
-                                    {!dropdowns.includes(loanedBy) ? null : (
-                                        <div>
-                                            {(loanedItems[loanedBy] as string[]).map((item: string) => {
-                                                const parsedItem = JSON.parse(item);
-                                                return (
-                                                    <div key={parsedItem.id}>
-                                                        <ListItem 
-                                                            item={parsedItem}
-                                                            onClick={() => {}}
-                                                            selected={false}    
-                                                        />
-                                                    </div>
-                                                );
-                                            })}
+                            <p className="text-2xl font-semibold text-center my-4">Legg til utstyr</p>
+                            <AddItem />
+                        </div>
+                        <div>
+                            <p className="text-2xl font-semibold text-center my-4">Utlånt utstyr</p>
+                            {Object.keys(loanedItems).length ? (
+                                <div className="mx-3">
+                                    {Object.keys(loanedItems).map((loanedBy: any) => (
+                                        <div className="border border-black py-1 m-1" key={loanedBy} onClick={() => handleItemClick(loanedBy)}>
+                                            <div className="flex justify-between px-1">
+                                                <p>{loanedBy}</p>
+                                                <Image src={down_arrow} alt="Down arrow" width={15} height={15} className={`transform ${dropdowns.includes(loanedBy) ? 'rotate-180' : ''}`}/>
+                                            </div>
+                                            {!dropdowns.includes(loanedBy) ? null : (
+                                                <div>
+                                                    {(loanedItems[loanedBy] as string[]).map((item: string) => {
+                                                        const parsedItem = JSON.parse(item);
+                                                        return (
+                                                            <div key={parsedItem.id}>
+                                                                <ListItem 
+                                                                    item={parsedItem}
+                                                                    onClick={() => {}}
+                                                                    selected={false}    
+                                                                />
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
+                            ) : (
+                                <p className="text-center">Ingen utlånt utstyr</p>
+                            )}
+                        </div>
+                        <div className="mx-3">
+                            <p className="text-2xl font-semibold text-center my-4">Gjør bruker til admin-bruker</p>
+                            {users.map((user: any, index: number) => (
+                                user.admin ? null : (
+                                    <div className="border border-black p-1 m-1" key={index}>
+                                        <p className="p-1 border border-black mb-1">{user.username}</p>
+                                        <Button
+                                            text="Gjør til admin" 
+                                            onClick={() => {
+                                                make_admin(user.username).then(() => {
+                                                    fetchItems();
+                                                });
+                                            }}/>
+                                    </div>)
                             ))}
                         </div>
-                    ) : (
-                        <p>Ingen utlånt utstyr</p>
-                    )}
                     </div>
-                    <div>
-                        <p>Gjør brukere til admin-bruker</p>
-                        {users.map((user: any, index: number) => (
-                            user.admin ? null : (
-                                <div className="border border-black p-1 m-1" key={index}>
-                                    <p className="p-1 border border-black mb-1">{user.username}</p>
-                                    <button className="border border-black p-1" onClick={() => {
-                                        make_admin(user.username).then(() => {
-                                            fetchItems();
-                                        });
-                                    }}>Gjør til admin</button>
-                                </div>)
-                        ))}
+                    <div className="my-4">
+                        <p className="text-2xl font-semibold text-center mb-4">Slett utstyr</p>
+                        <FullListSearch 
+                            type="admin"
+                            username={username}
+                        />
                     </div>
-                </div>
-                <div>
-                    <p>Slett utstyr</p>
-                    <FullListSearch 
-                        type="admin"
-                        username={username}
-                    />
                 </div>
             </div>
-        <Footer />
+            <Footer />
         </div>
     );
 }

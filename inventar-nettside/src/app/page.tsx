@@ -29,8 +29,8 @@ export default function Home() {
     <div>
       <Header />
       <div className="bg-quaternary p-4">
-        <div className="">
-          <p className="text-xl">Du er logget inn som: {username}</p>
+        <div>
+          <p className="text-xl font-medium">Du er logget inn som: {username}</p>
           <Button 
             text="Logg ut"
             onClick={() => {

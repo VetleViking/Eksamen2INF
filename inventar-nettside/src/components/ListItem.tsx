@@ -18,7 +18,7 @@ type ListProps = {
     selected: boolean,
 };
 
-const ListItem= ({ item, onClick, selected }: ListProps) => {
+const ListItem = ({ item, onClick, selected }: ListProps) => {
     const [dropdown, setDropdown] = useState(false);
 
     const handleImageClick = (event: React.MouseEvent) => {
@@ -34,19 +34,19 @@ const ListItem= ({ item, onClick, selected }: ListProps) => {
     return (
         <div className={`border border-black cursor-pointer p-1 mx-1 ${selected ? "bg-blue-200" : ""}`} onClick={handleClick}>
             <div className="flex justify-between">
-                <p>{item.description}</p>
+                <p className="font-medium">{item.description}</p>
                 <Image src={down_arrow} alt="Down arrow" width={15} height={15} onClick={handleImageClick} className={dropdown ? "transform rotate-180" : ""}/>
             </div>
             {dropdown ? (
                 <div className="border border-black p-1 mt-1">
-                    <p>Produsent: {item.manufacturer}</p>
-                    <p>Beskrivelse: {item.description}</p>
-                    <p>Spesifikasjoner: {item.specifications}</p>
-                    <p>Innkjøpsdato: {item.purchaseDate}</p>
-                    <p>Innkjøpspris: {item.purchasePrice}</p>
-                    <p>Forventet levetid: {item.expectedLifetime} år</p>
-                    <p>Kategori: {item.category}</p>
-                    {item.loanedBy ? <p>Lånt av: {item.loanedBy}</p> : null}
+                    <p><span className="font-medium">Produsent:</span> {item.manufacturer}</p>
+                    <p><span className="font-medium">Beskrivelse:</span> {item.description}</p>
+                    <p><span className="font-medium">Spesifikasjoner:</span> {item.specifications}</p>
+                    <p><span className="font-medium">Innkjøpsdato:</span> {item.purchaseDate}</p>
+                    <p><span className="font-medium">Innkjøpspris:</span> {item.purchasePrice}</p>
+                    <p><span className="font-medium">Forventet levetid:</span> {item.expectedLifetime} år</p>
+                    <p><span className="font-medium">Kategori:</span> {item.category}</p>
+                    {item.loanedBy ? <p><span className="font-medium">Lånt av:</span> {item.loanedBy}</p> : null}
                 </div>
             ) : null}
         </div>

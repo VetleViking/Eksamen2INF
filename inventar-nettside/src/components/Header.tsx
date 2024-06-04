@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import logo from "../images/innlandet-fylkeskommune.svg";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,8 +14,8 @@ const Header = () => {
                 <Image src={logo} alt="Innlandet fylkeskommune logo" width={180} height={100}/>
                 </Link>
                 <div className="flex items-center">
-                    <Link href={"/"} className="py-6 px-4 hover:bg-tertiary">Lån ut</Link>
-                    <Link href={"/loans"} className="py-6 px-4 hover:bg-tertiary">Dine lån</Link>
+                    <Link href={"/"} className="py-6 px-4 hover:bg-tertiary font-medium text-lg">Lån ut</Link>
+                    <Link href={"/loans"} className="py-6 px-4 hover:bg-tertiary font-medium text-lg">Dine lån</Link>
                 </div>
             </div>
         </div>
