@@ -33,6 +33,7 @@ const FullListSearch= ({type, username}: FullListSearchProps) => {
 
   async function fetchItems() {
     const items = await get_items();
+    console.log(items);
     setItems(items);
   }
 
@@ -152,7 +153,7 @@ const FullListSearch= ({type, username}: FullListSearchProps) => {
                     })) : type === 'loans' ? (
                     return_items(selectedItems).then(() => {
                         setSelectedItems([]);
-                        fetchItems()
+                        fetchItems();
                     })) : type === 'admin' ? (
                     remove_items(selectedItems).then(() => {
                         setSelectedItems([]);

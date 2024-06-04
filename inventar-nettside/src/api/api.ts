@@ -6,7 +6,7 @@ export async function add_items(items: { manufacturer: string, description: stri
             'Content-Type': 'application/json',
             'authorization': 'Bearer ' + localStorage.getItem('token')
         },
-        body: JSON.stringify({ items })
+        body: JSON.stringify({ inventory_data: items })
     });
 
     return await response.json();

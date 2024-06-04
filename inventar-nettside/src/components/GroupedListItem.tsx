@@ -34,7 +34,7 @@ const GroupedListItem= ({items, onClicks, selectedList, groupedBy}: GroupedListP
                 <p className="text-lg font-medium">{groupedBy}</p>
                 <Image src={down_arrow} alt="Down arrow" width={15} height={15} className={dropdown ? "transform rotate-180" : ""}/>
             </div>
-            <div className="mt-1">
+            <div className="my-1">
                 {dropdown ? items.map((item: {
                     manufacturer: string,
                     description: string,

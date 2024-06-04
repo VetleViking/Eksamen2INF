@@ -8,6 +8,8 @@ router.post('/upload', async (req: Request, res: Response, next: NextFunction) =
     try {
         const { inventory_data } = req.body;
 
+        console.log(inventory_data);
+
         const token = req.headers.authorization.split(' ')[1];
         const decoded = await verify_jwt(token);
         const isAdmin = await redisClient.hGet('admins', decoded.username);
@@ -43,6 +45,28 @@ router.post('/upload', async (req: Request, res: Response, next: NextFunction) =
     }
 });
 
+router.post('/remove', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { item_ids } = req.body;
+
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = await verify_jwt(token);
+        const isAdmin = await redisClient.hGet('admins', decoded.username);
+
+        if (!isAdmin) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        for (const id of item_ids) {
+            await redisClient.del(`inventory:${id}`);
+        }
+
+        res.status(200).json({ message: 'Items removed successfully' });
+    } catch(err) {
+        next(err);
+    }
+});
+
 router.get('/get', async (req: Request, res: Response, next: NextFunction) => {
     try {
         let index = parseInt(await redisClient.get(`inventory_data_index`)) || 0;
@@ -50,7 +74,10 @@ router.get('/get', async (req: Request, res: Response, next: NextFunction) => {
 
         for (let i = 0; i < index; i++) {
             let item = await redisClient.get(`inventory:${i}`);
-            inventory_data.push(JSON.parse(item));
+
+            if (item !== null) {
+                inventory_data.push(JSON.parse(item));
+            }
         }
 
         res.status(200).json(inventory_data);
@@ -74,6 +101,11 @@ router.get('/getloaned', async (req: Request, res: Response, next: NextFunction)
 
         for (let i = 0; i < index; i++) {
             const item = await redisClient.get(`inventory:${i}`);
+
+            if (item === null) {
+                continue;
+            }
+
             const itemParsed = JSON.parse(item);
 
             if (itemParsed.loanedBy) {
