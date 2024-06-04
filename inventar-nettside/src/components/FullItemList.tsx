@@ -1,8 +1,6 @@
 import React from "react";
-import GroupBy from "@/components/GroupBy";
 import GroupedListItem from "./GroupedListItem";
 import ListItem from "./ListItem";
-import { on } from "events";
 
 type FullItemListProps = {
     items: { [key: string]: any[] },

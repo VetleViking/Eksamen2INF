@@ -1,10 +1,8 @@
 "use client";
-import { get_items, loan_items, decode_jwt, return_items, remove_items } from "@/api/api";
+import { get_items, loan_items,return_items, remove_items } from "@/api/api";
 import { useEffect, useState } from "react";
-import Header from "@/components/Header";
 import FullItemList from "@/components/FullItemList";
 import Search from "@/components/Search";
-import Footer from "@/components/Footer";
 import Button from "./Button";
 import GroupBy from "./GroupBy";
 
@@ -175,7 +173,7 @@ const FullListSearch= ({type, username}: FullListSearchProps) => {
                     });
                 }}/>
             <Button 
-                text="Fjern alle"
+                text="Fjern valg"
                 onClick={() => {
                     setSelectedItems([]);
                 }}/>
