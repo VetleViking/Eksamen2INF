@@ -37,7 +37,6 @@ router.post('/createuser', async (req: Request, res: Response, next: NextFunctio
     try {
         const { username, password, email } = req.body;
 
-        console.log(username, password, email);
 
         if (!username || !password || !email) {
             res.status(400).json({ message: 'Username, password and email are required' });
@@ -45,8 +44,6 @@ router.post('/createuser', async (req: Request, res: Response, next: NextFunctio
         }
 
         const userExists = await redisClient.hGet('users:' + username, 'password');
-
-        console.log(userExists);
 
         if (userExists) {
             res.status(400).json({ message: 'User already exists' });
@@ -108,7 +105,6 @@ router.get('/getall', async (req: Request, res: Response, next: NextFunction) =>
         const users = await redisClient.keys('users:*');
 
         const usernames = users.map(user => user.split(':')[1]);
-        console.log(usernames);
         const admins = await redisClient.hGetAll('admins');
 
         const usernamesWithAdmin = usernames.map(username => {
@@ -207,8 +203,6 @@ router.post('/resetpasswordemail', async (req: Request, res: Response, next: Nex
     try {
         const { email } = req.body;
 
-        console.log(email);
-
         if (!email) {
             res.status(400).json({ message: 'Email is required' });
             return;
@@ -217,8 +211,6 @@ router.post('/resetpasswordemail', async (req: Request, res: Response, next: Nex
         const users = await redisClient.keys('users:*');
 
         const usersUsername = users.map(user => user.split(':')[1]);
-
-        console.log(usersUsername);
 
         let userExists = false;
 
@@ -236,8 +228,6 @@ router.post('/resetpasswordemail', async (req: Request, res: Response, next: Nex
         }
 
         const token = await generate_jwt(email, '1h');
-
-        console.log(token);
 
         const transporter = nodemailer.createTransport({
             service: 'gmail', 
@@ -258,8 +248,6 @@ router.post('/resetpasswordemail', async (req: Request, res: Response, next: Nex
 
         const info = await transporter.sendMail(mailOptions)
 
-        console.log("Message sent: %s", info.messageId);
-
         res.status(200).json({ message: 'Email sent' });
     } catch(err) {
         next(err);
@@ -269,8 +257,6 @@ router.post('/resetpasswordemail', async (req: Request, res: Response, next: Nex
 router.post('/resetpassword', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { token, password } = req.body;
-
-        console.log(token, password);
 
         if (!token || !password) {
             res.status(400).json({ message: 'Token and password are required' });
