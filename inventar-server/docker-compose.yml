@@ -4,7 +4,7 @@ volumes:
   db_data:
 
 services:
-  csa-redis:
+  eksamen-redis:
     image: redis:alpine
     container_name: eksamen-redis
     command: ["redis-server", "--requirepass", "password"]

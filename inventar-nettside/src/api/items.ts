@@ -1,4 +1,6 @@
-export async function add_items(items: { manufacturer: string, description: string, specifications: string, purchaseDate: string, purchasePrice: number, expectedLifetime: number, category: string}[], ) {
+import inventory_data_json from './inventory_data_with_categories (1).json';
+
+export async function add_items(items?: { manufacturer: string, description: string, specifications: string, purchaseDate: string, purchasePrice: number, expectedLifetime: number, category: string}[], ) {
 
     const response = await fetch(`http://localhost:4000/api/v1/inventory/upload`, {
         method: 'POST',
@@ -6,7 +8,7 @@ export async function add_items(items: { manufacturer: string, description: stri
             'Content-Type': 'application/json',
             'authorization': 'Bearer ' + localStorage.getItem('token')
         },
-        body: JSON.stringify({ inventory_data: items })
+        body: JSON.stringify({ inventory_data: items || inventory_data_json})
     });
 
     return await response.json();

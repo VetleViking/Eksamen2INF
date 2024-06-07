@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FullListSearch from "@/components/FullListSearch";
 import Button from "@/components/Button";
+import { add_items } from "@/api/items";
 
 export default function Home() {
   const [username, setUsername] = useState('');
@@ -36,6 +37,11 @@ export default function Home() {
             onClick={() => {
               localStorage.removeItem('token');
               window.location.href = '/login';
+            }}/>
+          <Button
+            text="test"
+            onClick={() => {
+              add_items();
             }}/>
         </div>
         <div className=" flex justify-center my-8">
