@@ -15,7 +15,7 @@ const HOST = process.env.SERVER_HOST || "localhost";
 app.use(
   cors({
     origin: [
-      "http://172.31.149.58",
+      "http://10.0.0.105",
       "http://localhost:3000",
     ],
     credentials: true,
