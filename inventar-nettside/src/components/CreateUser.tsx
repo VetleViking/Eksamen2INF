@@ -10,8 +10,6 @@ const CreateUser = () => {
     const [errormessage, setErrormessage] = useState('');
 
     const create_user_handler = async (username: string, password: string, email: string) => {
-        console.log(username, password, email);
-
         const data = await create_user(username, password, email);
         
         if (data.message === "User created") {

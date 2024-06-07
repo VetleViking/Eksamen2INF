@@ -15,6 +15,7 @@ const HOST = process.env.SERVER_HOST || "localhost";
 app.use(
   cors({
     origin: [
+      "http://eksamen.vest.li",
       "http://10.0.0.105",
       "http://localhost:3000",
     ],

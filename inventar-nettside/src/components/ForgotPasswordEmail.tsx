@@ -8,7 +8,6 @@ const ForgotPasswordEmail = () => {
 
     const reset_button_handler = async () => {
         const data: any = await send_reset_email(email);
-        console.log(data);
         setMessage(data.message || "Noe gikk galt");
     }
 

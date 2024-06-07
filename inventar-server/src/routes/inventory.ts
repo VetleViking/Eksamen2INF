@@ -125,7 +125,6 @@ router.post('/loan', async (req: Request, res: Response, next: NextFunction) => 
         const { item_ids, loaned_to } = req.body;
 
         for (const id of item_ids) {
-            console.log(id);
             let item = JSON.parse(await redisClient.get(`inventory:${id}`));
             item.loanedBy = loaned_to;
 
