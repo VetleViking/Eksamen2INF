@@ -1,4 +1,4 @@
-import { login } from "@/api/api";
+import { login } from "@/api/users";
 import { useState } from "react";
 import Button from "./Button";
 
@@ -41,6 +41,9 @@ const LoginComponent = () => {
             <Button
                 text="Logg inn" 
                 onClick={() => {login_handler(username, password)}} />
+            <Button 
+                text="Glemt passord?" 
+                onClick={() => {window.location.href = '/login/forgotpassword'}} />
             <p className="text-red-500 text-center">{errormessage}</p>
         </div>
     );

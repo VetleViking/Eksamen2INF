@@ -7,6 +7,8 @@ const userRequireMiddleware = async (req, res, next) => {
         'inventory/upload',
         'inventory/get',
         'users/createuser',
+        'users/resetpasswordemail',
+        'users/resetpassword'
     ];
     console.log('User Connected', req.ip);
 
@@ -26,7 +28,7 @@ const userRequireMiddleware = async (req, res, next) => {
                 return res.status(401).json({ error: 'Invalid token.' });
             }
 
-            const userExists = await redisClient.hGet('users', decoded.username);
+            const userExists = await redisClient.hGet(`users:${decoded.username}`, 'password');
 
             if (!userExists) {
                 return res.status(404).json({ error: 'User not found.' });

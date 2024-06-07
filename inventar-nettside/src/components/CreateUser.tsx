@@ -1,15 +1,18 @@
 "use client";
-import { create_user, login } from "@/api/api";
+import { create_user, login } from "@/api/users";
 import { useState } from "react";
 import Button from "./Button";
 
 const CreateUser = () => {   
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [errormessage, setErrormessage] = useState('');
 
-    const create_user_handler = async (username: string, password: string) => {
-        const data = await create_user(username, password);
+    const create_user_handler = async (username: string, password: string, email: string) => {
+        console.log(username, password, email);
+
+        const data = await create_user(username, password, email);
         
         if (data.message === "User created") {
             const loginData = await login(username, password);
@@ -44,10 +47,18 @@ const CreateUser = () => {
                 onChange={(e) => {
                     setPassword(e.target.value);
                 }} />
+            <input 
+                className="border border-black rounded-md p-1"
+                type="email" 
+                placeholder="epost"
+                value={email}
+                onChange={(e) => {
+                    setEmail(e.target.value);
+                }} />
                 
             <Button
                 text="Lag bruker" 
-                onClick={() => {create_user_handler(username, password)}} />
+                onClick={() => {create_user_handler(username, password, email)}} />
             <p className="text-[#e72328] text-center font-ListComponent">{errormessage}</p>
         </div>
     );

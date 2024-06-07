@@ -1,5 +1,5 @@
 "use client";
-import { decode_jwt } from "@/api/api";
+import { decode_jwt } from "@/api/users";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
