@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Button from '@/components/Button';
 import { reset_password } from '@/api/users';
 
-export default function Login() {
+function Reset() {
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
     const email = searchParams.get('email');
@@ -66,3 +66,11 @@ export default function Login() {
         </div>
     );
 }
+
+export default function ResetPassword() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Reset />
+        </Suspense>
+    );
+};
