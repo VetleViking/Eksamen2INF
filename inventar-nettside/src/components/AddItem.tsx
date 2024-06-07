@@ -1,4 +1,4 @@
-import { add_items } from "@/api/api";
+import { add_items } from "@/api/items";
 import React, { useState } from "react";
 import Button from "./Button";
 

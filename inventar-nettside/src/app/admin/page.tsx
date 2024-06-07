@@ -1,5 +1,6 @@
 "use client";
-import { decode_jwt, delete_user, get_loaned_items, get_users, make_admin, remove_admin } from "@/api/api";
+import { decode_jwt, delete_user, get_users, make_admin, remove_admin } from "@/api/users";
+import { get_loaned_items } from "@/api/items";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";

@@ -1,5 +1,5 @@
 "use client";
-import { get_items, loan_items,return_items, remove_items } from "@/api/api";
+import { get_items, loan_items,return_items, remove_items } from "@/api/items";
 import { useEffect, useState } from "react";
 import FullItemList from "@/components/FullItemList";
 import Search from "@/components/Search";
