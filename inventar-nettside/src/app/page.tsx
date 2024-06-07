@@ -38,11 +38,6 @@ export default function Home() {
               localStorage.removeItem('token');
               window.location.href = '/login';
             }}/>
-          <Button
-            text="test"
-            onClick={() => {
-              add_items();
-            }}/>
         </div>
         <div className=" flex justify-center my-8">
           <p className="text-3xl font-semibold">Lån utstyr</p>
