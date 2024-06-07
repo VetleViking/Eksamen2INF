@@ -8,8 +8,6 @@ router.post('/upload', async (req: Request, res: Response, next: NextFunction) =
     try {
         const { inventory_data } = req.body;
 
-        console.log(inventory_data);
-
         const token = req.headers.authorization.split(' ')[1];
         const decoded = await verify_jwt(token);
         const isAdmin = await redisClient.hGet('admins', decoded.username);
