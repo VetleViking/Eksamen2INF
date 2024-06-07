@@ -6,6 +6,8 @@ export async function send_reset_email(email: string) {
         },
         body: JSON.stringify({ email })
     });
+
+    return await response.json();
 }
 
 export async function decode_reset_password_token(token: string) {

@@ -73,6 +73,18 @@ export async function login(username: string, password: string) {
     return await response.json();
 }
 
+export async function reset_password(token: string, password: string) {
+    const response = await fetch(`http://localhost:4000/api/v1/users/resetpassword`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token, password })
+    });
+
+    return await response.json();
+}
+
 export async function decode_jwt(token: string) {
     const response = await fetch(`http://localhost:4000/api/v1/users/decodejwt`, {
         method: 'POST',

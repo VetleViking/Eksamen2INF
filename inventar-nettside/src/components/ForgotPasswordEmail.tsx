@@ -3,7 +3,14 @@ import Button from "./Button";
 import { send_reset_email } from "@/api/email";
 
 const ForgotPasswordEmail = () => {    
+    const [message, setMessage] = useState("");
     const [email, setEmail] = useState("");
+
+    const reset_button_handler = async () => {
+        const data: any = await send_reset_email(email);
+        console.log(data);
+        setMessage(data.message || "Noe gikk galt");
+    }
 
     return (
         <div className="flex flex-col gap-4 items-center">
@@ -19,7 +26,10 @@ const ForgotPasswordEmail = () => {
 
                 <Button
                     text="Send epost" 
-                    onClick={() => {send_reset_email(email);}} />
+                    onClick={() => {
+                        reset_button_handler();
+                    }} />
+                <p className="text-center">{message}</p>
             </div>
         </div>
     );

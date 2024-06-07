@@ -252,7 +252,7 @@ router.post('/resetpasswordemail', async (req: Request, res: Response, next: Nex
             to: email, 
             subject: 'Passord Tilbakestilling',
             html: `Du fikk denne eposten fordi du eller noen andre har bedt om en tilbakestilling av passordet ditt.
-                   Vennligst klikk <a href="http://localhost:3000/resetpassword&token=${token}">her</a> for å tilbakestille passordet ditt.
+                   Vennligst klikk <a href="http://localhost:3000/resetpassword?token=${token}&email=${email}">her</a> for å tilbakestille passordet ditt.
                    Hvis du ikke ba om en tilbakestilling av passordet ditt, vennligst ignorer denne eposten og passordet ditt vil forbli det samme.`
         };
 
@@ -270,15 +270,28 @@ router.post('/resetpassword', async (req: Request, res: Response, next: NextFunc
     try {
         const { token, password } = req.body;
 
+        console.log(token, password);
+
         if (!token || !password) {
             res.status(400).json({ message: 'Token and password are required' });
             return;
         }
-
+ 
         const decoded = await verify_jwt(token);
 
-        await redisClient.hSet(`users:${decoded.username}`, 'password', password);
+        const users = await redisClient.keys('users:*');
 
+        const usersUsername = users.map(user => user.split(':')[1]);
+
+
+        for (const user of usersUsername) {
+            const emailUser = await redisClient.hGet(`users:${user}`, 'email');
+            if (emailUser === decoded.username) {
+                await redisClient.hSet(`users:${user}`, 'password', password);
+                break;
+            }
+        }
+        
         res.status(200).json({ message: 'Password reset' });
     } catch(err) {
         next(err);
